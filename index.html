@@ -1,0 +1,89 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>展馆水路检修隔离方案</title>
+    <link rel="stylesheet" href="/src/style.css" />
+  </head>
+  <body>
+    <header class="app-header">
+      <div class="wrap header-inner">
+        <div>
+          <h1>展馆水路检修隔离方案</h1>
+          <p class="subtitle">粘贴拓扑 JSON → 指定供水点 / 漏点 / 保供出口 → 搜索关阀数最少的隔离组合</p>
+        </div>
+        <div class="limit-badge" title="仅对当前开启的阀门枚举">最多枚举 12 个开启阀门（最多 4095 种组合）</div>
+      </div>
+    </header>
+
+    <main class="wrap layout">
+      <!-- 左列：输入与操作 -->
+      <section class="col-left">
+        <div class="card">
+          <div class="card-head">
+            <h2>1. 拓扑 JSON</h2>
+            <div class="btn-row">
+              <button id="loadExample1" class="btn btn-ghost" type="button">载入示例一（有解）</button>
+              <button id="loadExample2" class="btn btn-ghost" type="button">载入示例二（无解）</button>
+            </div>
+          </div>
+          <textarea
+            id="jsonInput"
+            spellcheck="false"
+            placeholder='{&#10;  "nodes": [{ "id": "S1", "name": "供水点", "kind": "supply" }, ...],&#10;  "pipes": [{ "from": "S1", "to": "A", "valve": "V1" }, ...],&#10;  "supplies": ["S1"],&#10;  "leak": "L",&#10;  "protectedOutlets": ["O1"]&#10;}'
+          ></textarea>
+          <div class="card-actions">
+            <button id="parseBtn" class="btn btn-primary" type="button">解析拓扑</button>
+            <span id="parseStatus" class="status-line"></span>
+          </div>
+          <div id="issues" class="issues"></div>
+          <p class="hint">所有计算在浏览器本地完成，不会修改你输入的阀门状态；推荐方案中的关阀仅为建议动作。</p>
+        </div>
+
+        <div class="card" id="rolesCard" hidden>
+          <h2>2. 指定角色</h2>
+          <div class="role-block">
+            <div class="role-title">供水点（可多选，漏点须与全部水源断开）</div>
+            <div id="supplyList" class="check-grid"></div>
+          </div>
+          <div class="role-block">
+            <div class="role-title">漏点（单选）</div>
+            <div id="leakList" class="check-grid"></div>
+          </div>
+          <div class="role-block">
+            <div class="role-title">保供出口（可多选，检修期间必须持续供水）</div>
+            <div id="protectedList" class="check-grid"></div>
+          </div>
+          <div class="card-actions">
+            <button id="searchBtn" class="btn btn-primary" type="button" disabled>搜索关阀方案</button>
+          </div>
+        </div>
+
+        <div class="card" id="resultCard" hidden>
+          <h2>3. 隔离方案</h2>
+          <div id="resultBody"></div>
+        </div>
+      </section>
+
+      <!-- 右列：拓扑图 -->
+      <section class="col-right">
+        <div class="card diagram-card">
+          <h2>拓扑图</h2>
+          <div class="diagram-scroll">
+            <svg id="diagram"></svg>
+          </div>
+          <p id="diagramEmpty" class="hint">解析拓扑后在此显示；蓝线为方案实施后仍通水的管段。</p>
+        </div>
+      </section>
+    </main>
+
+    <footer class="app-footer">
+      <div class="wrap">
+        纯前端计算 · Node.js + Vite + TypeScript 构建 · 无外部账号与第三方服务依赖
+      </div>
+    </footer>
+
+    <script type="module" src="/src/main.ts"></script>
+  </body>
+</html>

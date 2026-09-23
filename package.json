@@ -1,0 +1,19 @@
+{
+  "name": "pavilion-pipeline-isolation",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "展馆水路检修隔离方案搜索（关阀组合）",
+  "scripts": {
+    "dev": "vite --host 0.0.0.0",
+    "build": "tsc --noEmit && vite build",
+    "preview": "vite preview --host 0.0.0.0",
+    "serve": "node server/main.mjs",
+    "typecheck": "tsc --noEmit",
+    "test:smoke": "esbuild scripts/smoke-test.ts --bundle --platform=node --format=esm --outfile=node_modules/.cache/smoke.mjs && node node_modules/.cache/smoke.mjs"
+  },
+  "devDependencies": {
+    "typescript": "^5.6.3",
+    "vite": "^5.4.10"
+  }
+}
